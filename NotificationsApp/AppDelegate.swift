@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //Add the AppDelegat as the delegate to UserNotification center 
+        UNUserNotificationCenter.current().delegate = self
+        
+        configureUserNotifications()
         return true
     }
 
@@ -42,5 +47,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+    private func configureUserNotifications(){
+        let category = UNNotificationCategory(identifier: notificationCategory, actions: [], intentIdentifiers: [], options: [])
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate{
+    //we need to set a method when the app is going to the foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
 }
 
